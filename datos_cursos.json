@@ -1,0 +1,155 @@
+{
+    "BEF01": {
+        "TipoCalificacion": "D",
+        "Practicas": 4,
+        "Laboratorios": 0,
+        "ExamenParcial": 0,
+        "ExamenFinal": 0,
+        "ExamenSustitutorio": 0,
+        "Monografias": 1
+    },
+    "BFI01": {
+        "TipoCalificacion": "F",
+        "Practicas": 5,
+        "Laboratorios": 5,
+        "ExamenParcial": 1,
+        "ExamenFinal": 1,
+        "ExamenSustitutorio": 1,
+        "Monografias": 0
+    },
+    "BIC01": {
+        "TipoCalificacion": "F",
+        "Practicas": 4,
+        "Laboratorios": 0,
+        "ExamenParcial": 1,
+        "ExamenFinal": 1,
+        "ExamenSustitutorio": 1,
+        "Monografias": 0
+    },
+    "BMA01": {
+        "TipoCalificacion": "G",
+        "Practicas": 4,
+        "Laboratorios": 0,
+        "ExamenParcial": 1,
+        "ExamenFinal": 1,
+        "ExamenSustitutorio": 1,
+        "Monografias": 0
+    },
+    "BMA02": {
+        "TipoCalificacion": "G",
+        "Practicas": 4,
+        "Laboratorios": 0,
+        "ExamenParcial": 1,
+        "ExamenFinal": 1,
+        "ExamenSustitutorio": 1,
+        "Monografias": 0
+    },
+    "BMA03": {
+        "TipoCalificacion": "G",
+        "Practicas": 4,
+        "Laboratorios": 0,
+        "ExamenParcial": 1,
+        "ExamenFinal": 1,
+        "ExamenSustitutorio": 1,
+        "Monografias": 0
+    },
+    "BQU01": {
+        "TipoCalificacion": "F",
+        "Practicas": 4,
+        "Laboratorios": 8,
+        "ExamenParcial": 1,
+        "ExamenFinal": 1,
+        "ExamenSustitutorio": 1,
+        "Monografias": 0
+    },
+    "BRC01": {
+        "TipoCalificacion": "D",
+        "Practicas": 4,
+        "Laboratorios": 0,
+        "ExamenParcial": 0,
+        "ExamenFinal": 0,
+        "ExamenSustitutorio": 0,
+        "Monografias": 2
+    },
+    "FB101": {
+        "TipoCalificacion": "G",
+        "Practicas": 4,
+        "Laboratorios": 0,
+        "ExamenParcial": 1,
+        "ExamenFinal": 1,
+        "ExamenSustitutorio": 1,
+        "Monografias": 0
+    },
+    "FB301": {
+        "TipoCalificacion": "G",
+        "Practicas": 4,
+        "Laboratorios": 0,
+        "ExamenParcial": 1,
+        "ExamenFinal": 1,
+        "ExamenSustitutorio": 1,
+        "Monografias": 0
+    },
+    "HU102": {
+        "TipoCalificacion": "D",
+        "Practicas": 4,
+        "Laboratorios": 0,
+        "ExamenParcial": 0,
+        "ExamenFinal": 0,
+        "ExamenSustitutorio": 0,
+        "Monografias": 2
+    },
+    "SI101": {
+        "TipoCalificacion": "F",
+        "Practicas": 4,
+        "Laboratorios": 0,
+        "ExamenParcial": 1,
+        "ExamenFinal": 1,
+        "ExamenSustitutorio": 1,
+        "Monografias": 0
+    },
+    "SI201": {
+        "TipoCalificacion": "G",
+        "Practicas": 4,
+        "Laboratorios": 0,
+        "ExamenParcial": 1,
+        "ExamenFinal": 1,
+        "ExamenSustitutorio": 1,
+        "Monografias": 1
+    },
+    "SI203": {
+        "TipoCalificacion": "F",
+        "Practicas": 4,
+        "Laboratorios": 0,
+        "ExamenParcial": 1,
+        "ExamenFinal": 1,
+        "ExamenSustitutorio": 1,
+        "Monografias": 2
+    },
+    "SI205": {
+        "TipoCalificacion": "F",
+        "Practicas": 4,
+        "Laboratorios": 0,
+        "ExamenParcial": 1,
+        "ExamenFinal": 1,
+        "ExamenSustitutorio": 1,
+        "Monografias": 0
+    },
+    "SI207": {
+        "TipoCalificacion": "G",
+        "Practicas": 5,
+        "Laboratorios": 0,
+        "ExamenParcial": 1,
+        "ExamenFinal": 1,
+        "ExamenSustitutorio": 1,
+        "Monografias": 1
+    },
+    "SW101": {
+        "TipoCalificacion": "F",
+        "Practicas": 4,
+        "Laboratorios": 0,
+        "ExamenParcial": 1,
+        "ExamenFinal": 1,
+        "ExamenSustitutorio": 1,
+        "Monografias": 0
+    }
+}
