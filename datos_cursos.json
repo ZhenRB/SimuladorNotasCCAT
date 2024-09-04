@@ -1,5 +1,6 @@
 {
     "BEF01": {
+        "NombreCurso": "ETICA Y FILOSOFIA POLITICA",
         "TipoCalificacion": "D",
         "Practicas": 4,
         "Laboratorios": 0,
@@ -9,6 +10,7 @@
         "Monografias": 1
     },
     "BFI01": {
+        "NombreCurso": "FISICA I",
         "TipoCalificacion": "F",
         "Practicas": 5,
         "Laboratorios": 5,
@@ -18,6 +20,7 @@
         "Monografias": 0
     },
     "BIC01": {
+        "NombreCurso": "INTRODUCCION A LA COMPUTACION",
         "TipoCalificacion": "F",
         "Practicas": 4,
         "Laboratorios": 0,
@@ -27,6 +30,7 @@
         "Monografias": 0
     },
     "BMA01": {
+        "NombreCurso": "CALCULO DIFERENCIAL",
         "TipoCalificacion": "G",
         "Practicas": 4,
         "Laboratorios": 0,
@@ -36,6 +40,7 @@
         "Monografias": 0
     },
     "BMA02": {
+        "NombreCurso": "CALCULO INTEGRAL",
         "TipoCalificacion": "G",
         "Practicas": 4,
         "Laboratorios": 0,
@@ -45,6 +50,7 @@
         "Monografias": 0
     },
     "BMA03": {
+        "NombreCurso": "ALGEBRA LINEAL",
         "TipoCalificacion": "G",
         "Practicas": 4,
         "Laboratorios": 0,
@@ -54,6 +60,7 @@
         "Monografias": 0
     },
     "BQU01": {
+        "NombreCurso": "QUIMICA I",
         "TipoCalificacion": "F",
         "Practicas": 4,
         "Laboratorios": 8,
@@ -63,6 +70,7 @@
         "Monografias": 0
     },
     "BRC01": {
+        "NombreCurso": "REDACCION Y COMUNICACION",
         "TipoCalificacion": "D",
         "Practicas": 4,
         "Laboratorios": 0,
@@ -72,6 +80,7 @@
         "Monografias": 2
     },
     "FB101": {
+        "NombreCurso": "GEOMETRIA ANALITICA",
         "TipoCalificacion": "G",
         "Practicas": 4,
         "Laboratorios": 0,
@@ -81,6 +90,7 @@
         "Monografias": 0
     },
     "FB301": {
+        "NombreCurso": "MATEMATICA DISCRETA",
         "TipoCalificacion": "G",
         "Practicas": 4,
         "Laboratorios": 0,
@@ -90,6 +100,7 @@
         "Monografias": 0
     },
     "HU102": {
+        "NombreCurso": "DESARROLLO PERSONAL",
         "TipoCalificacion": "D",
         "Practicas": 4,
         "Laboratorios": 0,
@@ -99,6 +110,7 @@
         "Monografias": 2
     },
     "SI101": {
+        "NombreCurso": "INTRODUCCION AL PENSAMIENTO Y A LA INGENIERIA DE SISTEMAS",
         "TipoCalificacion": "F",
         "Practicas": 4,
         "Laboratorios": 0,
@@ -108,6 +120,7 @@
         "Monografias": 0
     },
     "SI201": {
+        "NombreCurso": "PSICOLOGIA SISTEMICA",
         "TipoCalificacion": "G",
         "Practicas": 4,
         "Laboratorios": 0,
@@ -117,6 +130,7 @@
         "Monografias": 1
     },
     "SI203": {
+        "NombreCurso": "TEORIA Y CIENCIA DE SISTEMAS",
         "TipoCalificacion": "F",
         "Practicas": 4,
         "Laboratorios": 0,
@@ -126,6 +140,7 @@
         "Monografias": 2
     },
     "SI205": {
+        "NombreCurso": "ALGORITMIA Y ESTRUCTURA DE DATOS",
         "TipoCalificacion": "F",
         "Practicas": 4,
         "Laboratorios": 0,
@@ -135,6 +150,7 @@
         "Monografias": 0
     },
     "SI207": {
+        "NombreCurso": "SISTEMAS BIOLOGICOS Y ECOLOGICOS",
         "TipoCalificacion": "G",
         "Practicas": 5,
         "Laboratorios": 0,
@@ -144,6 +160,7 @@
         "Monografias": 1
     },
     "SW101": {
+        "NombreCurso": "INTRODUCCION A LA INGENIERIA DE SOFTWARE",
         "TipoCalificacion": "F",
         "Practicas": 4,
         "Laboratorios": 0,
