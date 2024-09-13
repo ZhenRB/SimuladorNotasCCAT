@@ -7,21 +7,21 @@ with open('datos_cursos.json', 'r') as file:
     datosCursos = json.load(file)
 
 # Número de prácticas que se usarán
-CantidadUsada = [0, 0, 0, 0, 3, 4, 5, 5, 6, 7, 7, 8, 8]
+CantidadUsada = [0, 1, 2, 3, 3, 4, 5, 5, 6, 7, 7, 8, 8]
 
-# PesoPrácticas, PesoParcial, PesoFinal
+#* PesoPracticas, PesoParcial, PesoFinal
 mapa_sis = {
-    'B': (0, 1, 2),
-    'D': (1, 0, 0),
-    'F': (1, 1, 2),
-    'G': (1, 1, 1)
+    'B' : (0,         1,         2),
+    'D' : (1,         0,         0),
+    'F' : (1,         1,         2), 
+    'G' : (1,         1,         1)
 }
 
 # Título
 st.title("Simulador de Notas")
 
 # Descripción de la aplicación
-st.write("Esta aplicación te permite simular tus notas, calcular tu promedio y verificar si pasas o no.")
+st.write("Esta aplicación te permite simular tus notas, calcular tu promedio y verificar si aprobaste o no.")
 
 # Crear un diccionario que mapea nombres de cursos a códigos
 codigo_a_nombre = {curso["NombreCurso"]: codigo for codigo, curso in datosCursos.items()}
@@ -110,9 +110,14 @@ if "ExamenSustitutorio" in curso_seleccionado:
 practicas = [convertir_a_numero(n) for n in datos_ingresados.get("Practicas", [])]
 laboratorios = [convertir_a_numero(n) for n in datos_ingresados.get("Laboratorios", [])]
 monografias = [convertir_a_numero(n) for n in datos_ingresados.get("Monografias", [])]
-examen_parcial = convertir_a_numero(st.selectbox("Examen Parcial", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
-examen_final = convertir_a_numero(st.selectbox("Examen Final", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
-examen_sustitutorio = convertir_a_numero(st.selectbox("Examen Sustitutorio", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
+
+examen_parcial = convertir_a_numero(datos_ingresados.get("ExamenParcial", [])[0] if datos_ingresados.get("ExamenParcial", []) else 0)
+examen_final = convertir_a_numero(datos_ingresados.get("ExamenFinal", [])[0] if datos_ingresados.get("ExamenFinal", []) else 0)
+examen_sustitutorio = convertir_a_numero(datos_ingresados.get("ExamenSustitutorio", [])[0] if datos_ingresados.get("ExamenSustitutorio", []) else 0)
+
+# examen_parcial = convertir_a_numero(st.selectbox("Examen Parcial", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
+# examen_final = convertir_a_numero(st.selectbox("Examen Final", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
+# examen_sustitutorio = convertir_a_numero(st.selectbox("Examen Sustitutorio", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
 
 # Calcular y mostrar el promedio
 if st.button("Calcular Promedio"):
