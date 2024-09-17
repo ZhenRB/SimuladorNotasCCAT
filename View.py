@@ -119,6 +119,22 @@ examen_sustitutorio = convertir_a_numero(datos_ingresados.get("ExamenSustitutori
 # examen_final = convertir_a_numero(st.selectbox("Examen Final", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
 # examen_sustitutorio = convertir_a_numero(st.selectbox("Examen Sustitutorio", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
 
+# here's my idea (by Rolly)
+# PARA 0A:
+# contar la cantida de 0A o pcs que no se eliminan
+# dividir las listas, hacer sort, luego merge y finalmente usar las necesarias
+# una nueva funcion puede ser creada...
+# PARA SIMULACION
+# 1  : mostrar la nota necesaria minima cuando se falta una nota, de manera inmediata
+# averiguar como se hace eso :v
+# 2  : primero pasar mis pcs xd, y vender las polladas XD
+#      es más complicado cuando se combina con susti y finales o parciales
+#      simular por fuerza bruta como primera version
+#      mostrar 20 pares de resultados?
+#      creo que sirve sobre todo cuanto falta final y susti (porque jalaste parcial xd)
+# 3  : no quiero
+#                               MORE UPDATES TOMORROW
+
 # Calcular y mostrar el promedio
 if st.button("Calcular Promedio"):
     promedio_final = promedioFinalCurso(practicas, laboratorios, monografias, codigoCursoSeleccionado, examen_parcial, examen_final, examen_sustitutorio)
