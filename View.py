@@ -7,14 +7,14 @@ with open('datos_cursos.json', 'r') as file:
     datosCursos = json.load(file)
 
 # Número de prácticas que se usarán
-CantidadUsada = [0, 0, 0, 0, 3, 4, 5, 5, 6, 7, 7, 8, 8]
+CantidadUsada = [0, 1, 2, 3, 3, 4, 5, 5, 6, 7, 7, 8, 8]
 
-# PesoPrácticas, PesoParcial, PesoFinal
+#* PesoPracticas, PesoParcial, PesoFinal
 mapa_sis = {
-    'B': (0, 1, 2),
-    'D': (1, 0, 0),
-    'F': (1, 1, 2),
-    'G': (1, 1, 1)
+    'B' : (0,         1,         2),
+    'D' : (1,         0,         0),
+    'F' : (1,         1,         2), 
+    'G' : (1,         1,         1)
 }
 
 
@@ -51,7 +51,11 @@ st.write("Esta aplicación te permite simular tus notas.")
 st.markdown("<h1 style='text-align: center; color: #1694f7;'>Simulador de Notas </h1>", unsafe_allow_html=True)
 
 # Descripción de la aplicación
+<<<<<<< HEAD
 st.markdown("<p style='text-align: center;'>Esta aplicación te permite simular tus notas y calcular tu promedio final para verificar si pasas el curso.</p>", unsafe_allow_html=True)
+=======
+st.write("Esta aplicación te permite simular tus notas, calcular tu promedio y verificar si aprobaste o no.")
+
 
 # Crear un diccionario que mapea nombres de cursos a códigos
 codigo_a_nombre = {curso["NombreCurso"]: codigo for codigo, curso in datosCursos.items()}
@@ -124,11 +128,37 @@ practicas = [convertir_a_numero(n) for n in datos_ingresados.get("Practicas", []
 laboratorios = [convertir_a_numero(n) for n in datos_ingresados.get("Laboratorios", [])]
 monografias = [convertir_a_numero(n) for n in datos_ingresados.get("Monografias", [])]
 
+<<<<<<< HEAD
 # Mostrar una sola vez los campos para exámenes
 st.markdown("<h4 style='color: #2196F3;'>3. Ingrese las notas de los exámenes:</h4>", unsafe_allow_html=True)
 examen_parcial = convertir_a_numero(st.selectbox("Examen Parcial", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
 examen_final = convertir_a_numero(st.selectbox("Examen Final", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
 examen_sustitutorio = convertir_a_numero(st.selectbox("Examen Sustitutorio", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
+=======
+examen_parcial = convertir_a_numero(datos_ingresados.get("ExamenParcial", [])[0] if datos_ingresados.get("ExamenParcial", []) else 0)
+examen_final = convertir_a_numero(datos_ingresados.get("ExamenFinal", [])[0] if datos_ingresados.get("ExamenFinal", []) else 0)
+examen_sustitutorio = convertir_a_numero(datos_ingresados.get("ExamenSustitutorio", [])[0] if datos_ingresados.get("ExamenSustitutorio", []) else 0)
+
+# examen_parcial = convertir_a_numero(st.selectbox("Examen Parcial", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
+# examen_final = convertir_a_numero(st.selectbox("Examen Final", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
+# examen_sustitutorio = convertir_a_numero(st.selectbox("Examen Sustitutorio", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
+
+# here's my idea (by Rolly)
+# PARA 0A:
+# contar la cantida de 0A o pcs que no se eliminan
+# dividir las listas, hacer sort, luego merge y finalmente usar las necesarias
+# una nueva funcion puede ser creada...
+# PARA SIMULACION
+# 1  : mostrar la nota necesaria minima cuando se falta una nota, de manera inmediata
+# averiguar como se hace eso :v
+# 2  : primero pasar mis pcs xd, y vender las polladas XD
+#      es más complicado cuando se combina con susti y finales o parciales
+#      simular por fuerza bruta como primera version
+#      mostrar 20 pares de resultados?
+#      creo que sirve sobre todo cuanto falta final y susti (porque jalaste parcial xd)
+# 3  : no quiero
+#                               MORE UPDATES TOMORROW
+>>>>>>> 996a25ca34c6e9b9c7211ba7f0ade1ed38a11fb5
 
 # Botón para calcular
 st.markdown("<h4 style='color: #2196F3;'>4. Calcula tu promedio final:</h4>", unsafe_allow_html=True)
