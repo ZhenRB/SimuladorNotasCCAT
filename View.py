@@ -22,7 +22,7 @@ from PIL import Image
 # Cargar imagen local
 image = Image.open(" ") #vacío hasta que me pasen una imagen decente del logo
 
-# Añadir estilos CSS para posicionar la imagen en la esquina superior izquierda
+#colocar la imagen en una esquina
 st.markdown("""
     <style>
     .reportview-container {
