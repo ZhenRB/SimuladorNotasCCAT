@@ -17,11 +17,41 @@ mapa_sis = {
     'G': (1, 1, 1)
 }
 
-# Título
+
+from PIL import Image
+# Cargar imagen local
+image = Image.open("/Users/jmon2103/Desktop/logo_cmichiPNG.png")
+
+# Añadir estilos CSS para posicionar la imagen en la esquina superior izquierda
+st.markdown("""
+    <style>
+    .reportview-container {
+        position: relative;
+    }
+    .header-img {
+        position: fixed;
+        top: 50px;
+        left: 50px;
+        width: 60px;
+        height: auto;
+        z-index: 1;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+# Mostrar la imagen en la interfaz en una pequeña esquina
+st.image(image, use_column_width=False, caption=None, output_format="PNG", width=100)
+
+# Resto del contenido de la aplicación
 st.title("Simulador de Notas")
+st.write("Esta aplicación te permite simular tus notas.")
+
+
+# Título
+st.markdown("<h1 style='text-align: center; color: #1694f7;'>Simulador de Notas </h1>", unsafe_allow_html=True)
 
 # Descripción de la aplicación
-st.write("Esta aplicación te permite simular tus notas, calcular tu promedio y verificar si pasas o no.")
+st.markdown("<p style='text-align: center;'>Esta aplicación te permite simular tus notas y calcular tu promedio final para verificar si pasas el curso.</p>", unsafe_allow_html=True)
 
 # Crear un diccionario que mapea nombres de cursos a códigos
 codigo_a_nombre = {curso["NombreCurso"]: codigo for codigo, curso in datosCursos.items()}
@@ -31,6 +61,7 @@ nombre_a_codigo = {nombre: codigo for nombre, codigo in codigo_a_nombre.items()}
 nombresCursos = list(codigo_a_nombre.keys())
 
 # Crear el selectbox para seleccionar el nombre del curso
+st.markdown("<h4 style='color: #2196F3;'>1. Selecciona un curso:</h4>", unsafe_allow_html=True)
 nombreCursoSeleccionado = st.selectbox(
     "Selecciona un curso:",
     nombresCursos
@@ -43,7 +74,7 @@ codigoCursoSeleccionado = nombre_a_codigo[nombreCursoSeleccionado]
 curso_seleccionado = datosCursos[codigoCursoSeleccionado]
 
 # Mostrar campos para ingresar datos solo si están en el JSON
-st.write("Ingrese los datos para el curso seleccionado:")
+st.markdown("<h4 style='color: #2196F3;'>2. Ingrese las notas para el curso seleccionado:</h4>", unsafe_allow_html=True)
 
 def mostrar_campos(campo, cantidad):
     """Muestra una serie de campos de entrada selectbox con opciones numéricas y especiales."""
@@ -88,33 +119,22 @@ if "Monografias" in curso_seleccionado:
         st.write(f"Ingrese las notas para {cantidad} monografías:")
     datos_ingresados["Monografias"] = mostrar_campos("Monografía", cantidad)
 
-if "ExamenParcial" in curso_seleccionado:
-    cantidad = curso_seleccionado["ExamenParcial"]
-    if cantidad > 0:
-        st.write(f"Ingrese las notas para {cantidad} exámenes parciales:")
-    datos_ingresados["ExamenParcial"] = mostrar_campos("Examen Parcial", cantidad)
-
-if "ExamenFinal" in curso_seleccionado:
-    cantidad = curso_seleccionado["ExamenFinal"]
-    if cantidad > 0:
-        st.write(f"Ingrese las notas para {cantidad} exámenes finales:")
-    datos_ingresados["ExamenFinal"] = mostrar_campos("Examen Final", cantidad)
-
-if "ExamenSustitutorio" in curso_seleccionado:
-    cantidad = curso_seleccionado["ExamenSustitutorio"]
-    if cantidad > 0:
-        st.write(f"Ingrese las notas para {cantidad} exámenes sustitutorios:")
-    datos_ingresados["ExamenSustitutorio"] = mostrar_campos("Examen Sustitutorio", cantidad)
-
 # Convertir las entradas a números
 practicas = [convertir_a_numero(n) for n in datos_ingresados.get("Practicas", [])]
 laboratorios = [convertir_a_numero(n) for n in datos_ingresados.get("Laboratorios", [])]
 monografias = [convertir_a_numero(n) for n in datos_ingresados.get("Monografias", [])]
+
+# Mostrar una sola vez los campos para exámenes
+st.markdown("<h4 style='color: #2196F3;'>3. Ingrese las notas de los exámenes:</h4>", unsafe_allow_html=True)
 examen_parcial = convertir_a_numero(st.selectbox("Examen Parcial", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
 examen_final = convertir_a_numero(st.selectbox("Examen Final", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
 examen_sustitutorio = convertir_a_numero(st.selectbox("Examen Sustitutorio", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
 
-# Calcular y mostrar el promedio
+# Botón para calcular
+st.markdown("<h4 style='color: #2196F3;'>4. Calcula tu promedio final:</h4>", unsafe_allow_html=True)
 if st.button("Calcular Promedio"):
     promedio_final = promedioFinalCurso(practicas, laboratorios, monografias, codigoCursoSeleccionado, examen_parcial, examen_final, examen_sustitutorio)
-    st.write(f"El promedio final es: {promedio_final:.2f}")
+    if promedio_final>=10:
+        st.markdown(f"<h2 style='color: #4CAF50;'>Tu promedio final es: {promedio_final:.2f} 🎉</h2>", unsafe_allow_html=True)
+    else:
+        st.markdown(f"<h2 style='color: #f32929;'>Tu promedio final es:  {promedio_final:.2f} ☠️</h2>", unsafe_allow_html=True)
