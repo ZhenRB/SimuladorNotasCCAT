@@ -20,7 +20,7 @@ mapa_sis = {
 
 from PIL import Image
 # Cargar imagen local
-image = Image.open("/Users/jmon2103/Desktop/logo_cmichiPNG.png")
+image = Image.open(" ") #vacío hasta que me pasen una imagen decente del logo
 
 # Añadir estilos CSS para posicionar la imagen en la esquina superior izquierda
 st.markdown("""
@@ -138,3 +138,5 @@ if st.button("Calcular Promedio"):
         st.markdown(f"<h2 style='color: #4CAF50;'>Tu promedio final es: {promedio_final:.2f} 🎉</h2>", unsafe_allow_html=True)
     else:
         st.markdown(f"<h2 style='color: #f32929;'>Tu promedio final es:  {promedio_final:.2f} ☠️</h2>", unsafe_allow_html=True)
+
+
