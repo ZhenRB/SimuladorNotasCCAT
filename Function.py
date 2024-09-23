@@ -16,6 +16,7 @@ mapaSis = {
     'G' : (1, 1, 1)
 }
 
+#* Manejo de valores pa notas especiales
 def convertirANumero(valor):
     """Convierte una cadena a número, manejando valores especiales."""
     if valor == "NSP":
@@ -41,7 +42,7 @@ def promedioPracticas(practicas, laboratorios, monografias, codigoCurso):
     # Define cuántas prácticas, laboratorios y monografías se usarán
     practicasUsadas = cantidadUsada[datosCursos[codigoCurso].get("Practicas")]
     laboratoriosUsadas = cantidadUsada[datosCursos[codigoCurso].get("Laboratorios")]
-    monografiasUsadas = datosCursos[codigoCurso]["Monografias"]
+    monografiasUsadas = datosCursos[codigoCurso].get("Monografias")
 
     # Ajusta el número de elementos contables si hay ausencias
     if ceroAPracticas > 0:
@@ -54,7 +55,7 @@ def promedioPracticas(practicas, laboratorios, monografias, codigoCurso):
     # Selecciona las mejores notas contables
     practicasContables = sorted(practicas)[-practicasUsadas:] + [0] * ceroAPracticas
     laboratoriosContables = sorted(laboratorios)[-laboratoriosUsadas:] + [0] * ceroALaboratorios
-    monografiasContables = monografias
+    monografiasContables = sorted(monografias)[-monografiasUsadas:] + [0] * ceroAMonografias
 
     # Ajustes especiales para ciertos cursos
     if codigoCurso in ["SI101", "SW101"]:
@@ -73,16 +74,34 @@ def promedioFinalCurso(practicas, laboratorios, monografias, codigoCurso, examen
     pesoPracticas, pesoParcial, pesoFinal = mapaSis[tipoCalificacion]
     pesoTotal = pesoPracticas + pesoParcial + pesoFinal
 
-    # Validar la mejor nota cuando existe sustitutorio
-    if examenSustitutorio > 0:
-        promedioEpEs = promedioFinalCurso(practicas, laboratorios, monografias, codigoCurso, examenSustitutorio, examenFinal, 0)
-        promedioEfEs = promedioFinalCurso(practicas, laboratorios, monografias, codigoCurso, examenParcial, examenSustitutorio, 0)
-        if promedioEpEs > promedioEfEs:
-            examenParcial = examenSustitutorio
-        else:
-            examenFinal = examenSustitutorio
+    examenParcial = convertirANumero(examenParcial)
+    examenFinal = convertirANumero(examenFinal)
+    examenSustitutorio = convertirANumero(examenSustitutorio)
+    
+    if(examenParcial != -2 and examenFinal != -2):
+        # Validar la mejor nota cuando existe sustitutorio
+        if (examenSustitutorio > 0 or examenSustitutorio == -2):
+            promedioEpEs = promedioFinalCurso(practicas, laboratorios, monografias, codigoCurso, examenSustitutorio, examenFinal, 0)
+            promedioEfEs = promedioFinalCurso(practicas, laboratorios, monografias, codigoCurso, examenParcial, examenSustitutorio, 0)
+            if promedioEpEs > promedioEfEs:
+                examenParcial = examenSustitutorio
+            else:
+                examenFinal = examenSustitutorio
+        if(examenSustitutorio == -2):
+            examenSustitutorio = 0
 
+    elif((examenParcial == -2 and examenFinal != -2)):
+        examenFinal = examenSustitutorio
+        examenParcial = 0
+    elif((examenFinal == -2 and examenParcial != -2)):
+        examenParcial = examenSustitutorio 
+        examenFinal = 0
+    elif((examenParcial == -2 and examenFinal == -2)):
+        examenParcial = 0
+        examenFinal = 0
+    
     # Calcula el promedio final ponderado
     promedioFinal = (promedioDePracticas * pesoPracticas + examenParcial * pesoParcial + examenFinal * pesoFinal) / pesoTotal
     
     return promedioFinal
+

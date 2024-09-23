@@ -1,27 +1,23 @@
 import json
-<<<<<<< HEAD
 from Function import promedioPracticas, promedioFinalCurso, convertirANumero
-=======
-from Function import promedioPracticas, promedioFinalCurso, convertir_a_numero
 from PIL import Image
->>>>>>> 0f595f6a1903d895586afe2c3b8fda52d1f94f3e
 import streamlit as st
 
-# Cargar datos desde el archivo JSON
+#* Extrae los datos del json para usarlos
 with open('datos_cursos.json', 'r') as file:
     datosCursos = json.load(file)
 
-# Número de prácticas que se usarán
-CantidadUsada = [0, 1, 2, 3, 3, 4, 5, 5, 6, 7, 7, 8, 8]
+#* N° de Practicas que se usaran respecto al total que haya
+#* PCs:          0  1  2  3  4  5  6  7  8  9  10 11 12
+cantidadUsada = [0, 0, 0, 0, 3, 4, 5, 5, 6, 7, 7, 8, 8]
 
 #* PesoPracticas, PesoParcial, PesoFinal
-mapa_sis = {
-    'B' : (0,         1,         2),
-    'D' : (1,         0,         0),
-    'F' : (1,         1,         2), 
-    'G' : (1,         1,         1)
+mapaSis = {
+    'B' : (0, 1, 2),
+    'D' : (1, 0, 0),
+    'F' : (1, 1, 2), 
+    'G' : (1, 1, 1)
 }
-
 
 # Logo en la esquina
 st.markdown("""<style>
@@ -41,8 +37,6 @@ st.markdown("""<style>
 
 # Mostrar logo en la interfaz 
 st.image("Images/LogoCmichi.png", use_column_width=False, caption=None, output_format="PNG", width=100)
-
-
 
 # Título
 st.markdown("""<h1 style='text-align: center; color: #1694f7; font-family: "Times New Roman", Times, serif;'>Simulador de Notas</h1>""", unsafe_allow_html=True)
@@ -119,7 +113,6 @@ if "Laboratorios" in curso_seleccionado:
         datos_ingresados["Laboratorios"] = mostrar_campos("Laboratorio", cantidad)
         st.image("Images/informe_lab.jpg", width=150)    
 
-
 if "Monografias" in curso_seleccionado:
     cantidad = curso_seleccionado["Monografias"]
     if cantidad > 0:
@@ -128,22 +121,13 @@ if "Monografias" in curso_seleccionado:
 
 
 # Convertir las entradas a números
-<<<<<<< HEAD
+
 practicas = [convertirANumero(n) for n in datos_ingresados.get("Practicas", [])]
 laboratorios = [convertirANumero(n) for n in datos_ingresados.get("Laboratorios", [])]
 monografias = [convertirANumero(n) for n in datos_ingresados.get("Monografias", [])]
 examen_parcial = convertirANumero(st.selectbox("Examen Parcial", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
 examen_final = convertirANumero(st.selectbox("Examen Final", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
 examen_sustitutorio = convertirANumero(st.selectbox("Examen Sustitutorio", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
-=======
-practicas = [convertir_a_numero(n) for n in datos_ingresados.get("Practicas", [])]
-laboratorios = [convertir_a_numero(n) for n in datos_ingresados.get("Laboratorios", [])]
-monografias = [convertir_a_numero(n) for n in datos_ingresados.get("Monografias", [])]
->>>>>>> 0f595f6a1903d895586afe2c3b8fda52d1f94f3e
-
-examen_parcial = convertir_a_numero(datos_ingresados.get("ExamenParcial", [])[0] if datos_ingresados.get("ExamenParcial", []) else 0)
-examen_final = convertir_a_numero(datos_ingresados.get("ExamenFinal", [])[0] if datos_ingresados.get("ExamenFinal", []) else 0)
-examen_sustitutorio = convertir_a_numero(datos_ingresados.get("ExamenSustitutorio", [])[0] if datos_ingresados.get("ExamenSustitutorio", []) else 0)
 
 # examen_parcial = convertir_a_numero(st.selectbox("Examen Parcial", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
 # examen_final = convertir_a_numero(st.selectbox("Examen Final", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
@@ -170,9 +154,7 @@ st.markdown("""<h4 style='color: #2196F3; font-family: "Times New Roman", Times,
     
 if st.button("Calcular Promedio"):
     promedio_final = promedioFinalCurso(practicas, laboratorios, monografias, codigoCursoSeleccionado, examen_parcial, examen_final, examen_sustitutorio)
-<<<<<<< HEAD
-    st.write(f"El promedio final es: {promedio_final:.2f}")
-=======
+
     if promedio_final>=10:
         st.markdown(f"""<h2 style='color: #4CAF50; font-family: "Times New Roman", Times, serif;'>Tu promedio final es: {promedio_final:.2f} 🎉</h2>""", unsafe_allow_html=True)
         # Agregar imagen aprobado en base al json
@@ -193,8 +175,7 @@ if st.button("Calcular Promedio"):
         else:
             st.image("Images/gato_jalado_default.jpg", width=200)
 
-
-
-
->>>>>>> 0f595f6a1903d895586afe2c3b8fda52d1f94f3e
-
+st.write("Quieres ver el simulado?")
+if(st.button("JESUS TOCA ESTA")):
+   for i in range (100):
+        st.write("Edward chupala")
