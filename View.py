@@ -79,23 +79,23 @@ def mostrar_campos(campo, cantidad):
     """Muestra una serie de campos de entrada selectbox con opciones numéricas y especiales."""
     if cantidad <= 0:
         return []
-    
-    num_columnas = min(3, max(1, cantidad))  # Asegurarse de que al menos 1 columna se use
-    columnas = st.columns(num_columnas)
-    entradas = []
-    
-    opciones = [str(i) for i in range(1, 21)] + ["NSP", "0A"]  # Opciones del 1 al 20, NSP y 0A
-    
-    for i in range(cantidad):
-        col = columnas[i % len(columnas)]  # Selecciona la columna correspondiente
-        with col:
-            entradas.append(st.selectbox(
-                f"{campo} {i+1}",
-                options=opciones,
-                index=9,  # Default "10"
-                help=f"Ingrese la nota para {campo} {i+1} (1-20, NSP, 0A)"
-            ))
-    return entradas
+    else:
+        num_columnas = min(3, max(1, cantidad))  # Asegurarse de que al menos 1 columna se use
+        columnas = st.columns(num_columnas)
+        entradas = []
+        
+        opciones = [str(i) for i in range(1, 21)] + ["NSP", "0A"]  # Opciones del 1 al 20, NSP y 0A
+        
+        for i in range(cantidad):
+            col = columnas[i % len(columnas)]  # Selecciona la columna correspondiente
+            with col:
+                entradas.append(st.selectbox(
+                    f"{campo} {i+1}",
+                    options=opciones,
+                    index=9,  # Default "10"
+                    help=f"Ingrese la nota para {campo} {i+1} (1-20, NSP, 0A)"
+                ))
+        return entradas
 
 # Crear campos basados en los valores del JSON
 datos_ingresados = {}
@@ -125,9 +125,11 @@ if "Monografias" in curso_seleccionado:
 practicas = [convertirANumero(n) for n in datos_ingresados.get("Practicas", [])]
 laboratorios = [convertirANumero(n) for n in datos_ingresados.get("Laboratorios", [])]
 monografias = [convertirANumero(n) for n in datos_ingresados.get("Monografias", [])]
-examen_parcial = convertirANumero(st.selectbox("Examen Parcial", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
-examen_final = convertirANumero(st.selectbox("Examen Final", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
-examen_sustitutorio = convertirANumero(st.selectbox("Examen Sustitutorio", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
+
+if(curso_seleccionado["ExamenParcial"] == 1):
+    examen_parcial = convertirANumero(st.selectbox("Examen Parcial", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
+    examen_final = convertirANumero(st.selectbox("Examen Final", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
+    examen_sustitutorio = convertirANumero(st.selectbox("Examen Sustitutorio", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
 
 # examen_parcial = convertir_a_numero(st.selectbox("Examen Parcial", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
 # examen_final = convertir_a_numero(st.selectbox("Examen Final", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
