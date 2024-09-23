@@ -163,9 +163,9 @@ if st.button("Calcular Promedio"):
         if("Aprobado" in curso_seleccionado and curso_seleccionado["Aprobado"] != 0):
             aprobado = curso_seleccionado["Aprobado"]
             if aprobado: 
-                st.image(aprobado, width=150)
+                st.image(aprobado, width=200)
         else:
-            st.image("Images/patito_aprobado_default.jpg", width=150)
+            st.image("Images/patito_aprobado_default.jpg", width=200)
 
     else:
         st.markdown(f"""<h2 style='color: #f32929; font-family: "Times New Roman", Times, serif;'>Tu promedio final es: {promedio_final:.2f} ☠️</h2>""",unsafe_allow_html=True)
@@ -173,9 +173,9 @@ if st.button("Calcular Promedio"):
         if("Jalado" in curso_seleccionado and curso_seleccionado["Jalado"] != 0):
             jalado = curso_seleccionado["Jalado"]
             if jalado: 
-                st.image(jalado, width=150)
+                st.image(jalado, width=200)
         else:
-            st.image("Images/gato_jalado_default.jpg", width=150)
+            st.image("Images/gato_jalado_default.jpg", width=200)
 
 
 
