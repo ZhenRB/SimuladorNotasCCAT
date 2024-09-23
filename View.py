@@ -1,5 +1,5 @@
 import json
-from Function import promedioPracticas, promedioFinalCurso, convertir_a_numero
+from Function import promedioPracticas, promedioFinalCurso, convertirANumero
 import streamlit as st
 
 # Cargar datos desde el archivo JSON
@@ -107,14 +107,15 @@ if "ExamenSustitutorio" in curso_seleccionado:
     datos_ingresados["ExamenSustitutorio"] = mostrar_campos("Examen Sustitutorio", cantidad)
 
 # Convertir las entradas a números
-practicas = [convertir_a_numero(n) for n in datos_ingresados.get("Practicas", [])]
-laboratorios = [convertir_a_numero(n) for n in datos_ingresados.get("Laboratorios", [])]
-monografias = [convertir_a_numero(n) for n in datos_ingresados.get("Monografias", [])]
-examen_parcial = convertir_a_numero(st.selectbox("Examen Parcial", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
-examen_final = convertir_a_numero(st.selectbox("Examen Final", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
-examen_sustitutorio = convertir_a_numero(st.selectbox("Examen Sustitutorio", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
+practicas = [convertirANumero(n) for n in datos_ingresados.get("Practicas", [])]
+laboratorios = [convertirANumero(n) for n in datos_ingresados.get("Laboratorios", [])]
+monografias = [convertirANumero(n) for n in datos_ingresados.get("Monografias", [])]
+examen_parcial = convertirANumero(st.selectbox("Examen Parcial", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
+examen_final = convertirANumero(st.selectbox("Examen Final", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
+examen_sustitutorio = convertirANumero(st.selectbox("Examen Sustitutorio", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
 
 # Calcular y mostrar el promedio
 if st.button("Calcular Promedio"):
     promedio_final = promedioFinalCurso(practicas, laboratorios, monografias, codigoCursoSeleccionado, examen_parcial, examen_final, examen_sustitutorio)
     st.write(f"El promedio final es: {promedio_final:.2f}")
+
