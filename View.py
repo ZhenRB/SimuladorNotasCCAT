@@ -1,5 +1,6 @@
 import json
 from Function import promedioPracticas, promedioFinalCurso, convertir_a_numero
+from PIL import Image
 import streamlit as st
 
 # Cargar datos desde el archivo JSON
@@ -18,13 +19,8 @@ mapa_sis = {
 }
 
 
-from PIL import Image
-# Cargar imagen local
-image = Image.open(" ") #vacío hasta que me pasen una imagen decente del logo
-
-#colocar la imagen en una esquina
-st.markdown("""
-    <style>
+# Logo en la esquina
+st.markdown("""<style>
     .reportview-container {
         position: relative;
     }
@@ -39,22 +35,16 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# Mostrar la imagen en la interfaz en una pequeña esquina
-st.image(image, use_column_width=False, caption=None, output_format="PNG", width=100)
+# Mostrar logo en la interfaz 
+st.image("Images/LogoCmichi.png", use_column_width=False, caption=None, output_format="PNG", width=100)
 
-# Resto del contenido de la aplicación
-st.title("Simulador de Notas")
-st.write("Esta aplicación te permite simular tus notas.")
 
 
 # Título
-st.markdown("<h1 style='text-align: center; color: #1694f7;'>Simulador de Notas </h1>", unsafe_allow_html=True)
+st.markdown("""<h1 style='text-align: center; color: #1694f7; font-family: "Times New Roman", Times, serif;'>Simulador de Notas</h1>""", unsafe_allow_html=True)
 
 # Descripción de la aplicación
-<<<<<<< HEAD
-st.markdown("<p style='text-align: center;'>Esta aplicación te permite simular tus notas y calcular tu promedio final para verificar si pasas el curso.</p>", unsafe_allow_html=True)
-=======
-st.write("Esta aplicación te permite simular tus notas, calcular tu promedio y verificar si aprobaste o no.")
+st.markdown("""<p style='text-align: center; font-family: "Times New Roman", Times, serif; '>Esta aplicación te permite simular tus notas y calcular tu promedio final para verificar si pasas el curso.</p>""", unsafe_allow_html=True)
 
 
 # Crear un diccionario que mapea nombres de cursos a códigos
@@ -65,7 +55,7 @@ nombre_a_codigo = {nombre: codigo for nombre, codigo in codigo_a_nombre.items()}
 nombresCursos = list(codigo_a_nombre.keys())
 
 # Crear el selectbox para seleccionar el nombre del curso
-st.markdown("<h4 style='color: #2196F3;'>1. Selecciona un curso:</h4>", unsafe_allow_html=True)
+st.markdown("""<h4 style='color: #2196F3; font-family: "Times New Roman", Times, serif;'>1. Selecciona un curso:</h4>""", unsafe_allow_html=True)
 nombreCursoSeleccionado = st.selectbox(
     "Selecciona un curso:",
     nombresCursos
@@ -77,8 +67,15 @@ codigoCursoSeleccionado = nombre_a_codigo[nombreCursoSeleccionado]
 # Obtener el curso seleccionado usando el código
 curso_seleccionado = datosCursos[codigoCursoSeleccionado]
 
+if ("Imagen" in curso_seleccionado and curso_seleccionado["Imagen"] != 0):
+    sticker_prof = curso_seleccionado["Imagen"]
+    if sticker_prof: 
+        st.image(sticker_prof, width=150)
+else:
+    st.write(" ")
+
 # Mostrar campos para ingresar datos solo si están en el JSON
-st.markdown("<h4 style='color: #2196F3;'>2. Ingrese las notas para el curso seleccionado:</h4>", unsafe_allow_html=True)
+st.markdown("""<h4 style='color: #2196F3; font-family: "Times New Roman", Times, serif;'>2. Ingrese las notas para el curso seleccionado:</h4>""", unsafe_allow_html=True)
 
 def mostrar_campos(campo, cantidad):
     """Muestra una serie de campos de entrada selectbox con opciones numéricas y especiales."""
@@ -115,7 +112,9 @@ if "Laboratorios" in curso_seleccionado:
     cantidad = curso_seleccionado["Laboratorios"]
     if cantidad > 0:
         st.write(f"Ingrese las notas para {cantidad} laboratorios:")
-    datos_ingresados["Laboratorios"] = mostrar_campos("Laboratorio", cantidad)
+        datos_ingresados["Laboratorios"] = mostrar_campos("Laboratorio", cantidad)
+        st.image("Images/informe_lab.jpg", width=150)    
+
 
 if "Monografias" in curso_seleccionado:
     cantidad = curso_seleccionado["Monografias"]
@@ -123,18 +122,12 @@ if "Monografias" in curso_seleccionado:
         st.write(f"Ingrese las notas para {cantidad} monografías:")
     datos_ingresados["Monografias"] = mostrar_campos("Monografía", cantidad)
 
+
 # Convertir las entradas a números
 practicas = [convertir_a_numero(n) for n in datos_ingresados.get("Practicas", [])]
 laboratorios = [convertir_a_numero(n) for n in datos_ingresados.get("Laboratorios", [])]
 monografias = [convertir_a_numero(n) for n in datos_ingresados.get("Monografias", [])]
 
-<<<<<<< HEAD
-# Mostrar una sola vez los campos para exámenes
-st.markdown("<h4 style='color: #2196F3;'>3. Ingrese las notas de los exámenes:</h4>", unsafe_allow_html=True)
-examen_parcial = convertir_a_numero(st.selectbox("Examen Parcial", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
-examen_final = convertir_a_numero(st.selectbox("Examen Final", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
-examen_sustitutorio = convertir_a_numero(st.selectbox("Examen Sustitutorio", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
-=======
 examen_parcial = convertir_a_numero(datos_ingresados.get("ExamenParcial", [])[0] if datos_ingresados.get("ExamenParcial", []) else 0)
 examen_final = convertir_a_numero(datos_ingresados.get("ExamenFinal", [])[0] if datos_ingresados.get("ExamenFinal", []) else 0)
 examen_sustitutorio = convertir_a_numero(datos_ingresados.get("ExamenSustitutorio", [])[0] if datos_ingresados.get("ExamenSustitutorio", []) else 0)
@@ -158,15 +151,33 @@ examen_sustitutorio = convertir_a_numero(datos_ingresados.get("ExamenSustitutori
 #      creo que sirve sobre todo cuanto falta final y susti (porque jalaste parcial xd)
 # 3  : no quiero
 #                               MORE UPDATES TOMORROW
->>>>>>> 996a25ca34c6e9b9c7211ba7f0ade1ed38a11fb5
 
 # Botón para calcular
-st.markdown("<h4 style='color: #2196F3;'>4. Calcula tu promedio final:</h4>", unsafe_allow_html=True)
+st.markdown("""<h4 style='color: #2196F3; font-family: "Times New Roman", Times, serif;'>4. Calcula tu promedio final:</h4>""", unsafe_allow_html=True)
+    
 if st.button("Calcular Promedio"):
     promedio_final = promedioFinalCurso(practicas, laboratorios, monografias, codigoCursoSeleccionado, examen_parcial, examen_final, examen_sustitutorio)
     if promedio_final>=10:
-        st.markdown(f"<h2 style='color: #4CAF50;'>Tu promedio final es: {promedio_final:.2f} 🎉</h2>", unsafe_allow_html=True)
+        st.markdown(f"""<h2 style='color: #4CAF50; font-family: "Times New Roman", Times, serif;'>Tu promedio final es: {promedio_final:.2f} 🎉</h2>""", unsafe_allow_html=True)
+        # Agregar imagen aprobado en base al json
+        if("Aprobado" in curso_seleccionado and curso_seleccionado["Aprobado"] != 0):
+            aprobado = curso_seleccionado["Aprobado"]
+            if aprobado: 
+                st.image(aprobado, width=150)
+        else:
+            st.image("Images/patito_aprobado_default.jpg", width=150)
+
     else:
-        st.markdown(f"<h2 style='color: #f32929;'>Tu promedio final es:  {promedio_final:.2f} ☠️</h2>", unsafe_allow_html=True)
+        st.markdown(f"""<h2 style='color: #f32929; font-family: "Times New Roman", Times, serif;'>Tu promedio final es: {promedio_final:.2f} ☠️</h2>""",unsafe_allow_html=True)
+        # Agregar imagen jalado en base al json
+        if("Jalado" in curso_seleccionado and curso_seleccionado["Jalado"] != 0):
+            jalado = curso_seleccionado["Jalado"]
+            if jalado: 
+                st.image(jalado, width=150)
+        else:
+            st.image("Images/gato_jalado_default.jpg", width=150)
+
+
+
 
 
