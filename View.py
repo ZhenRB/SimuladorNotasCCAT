@@ -1,183 +1,411 @@
+"""
+Simulador de Notas CCAT
+Interfaz de la aplicación (Streamlit).
+
+Ejecutar con:  streamlit run View.py
+"""
+
 import json
-from Function import promedioPracticas, promedioFinalCurso, convertirANumero
-from PIL import Image
+from pathlib import Path
+
 import streamlit as st
 
-#* Extrae los datos del json para usarlos
-with open('datos_cursos.json', 'r') as file:
-    datosCursos = json.load(file)
-
-#* N° de Practicas que se usaran respecto al total que haya
-#* PCs:          0  1  2  3  4  5  6  7  8  9  10 11 12
-cantidadUsada = [0, 0, 0, 0, 3, 4, 5, 5, 6, 7, 7, 8, 8]
-
-#* PesoPracticas, PesoParcial, PesoFinal
-mapaSis = {
-    'B' : (0, 1, 2),
-    'D' : (1, 0, 0),
-    'F' : (1, 1, 2), 
-    'G' : (1, 1, 1)
-}
-
-# Logo en la esquina
-st.markdown("""<style>
-    .reportview-container {
-        position: relative;
-    }
-    .header-img {
-        position: fixed;
-        top: 50px;
-        left: 50px;
-        width: 60px;
-        height: auto;
-        z-index: 1;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-# Mostrar logo en la interfaz 
-st.image("Images/LogoCmichi.png", use_column_width=False, caption=None, output_format="PNG", width=100)
-
-# Título
-st.markdown("""<h1 style='text-align: center; color: #1694f7; font-family: "Times New Roman", Times, serif;'>Simulador de Notas</h1>""", unsafe_allow_html=True)
-
-# Descripción de la aplicación
-st.markdown("""<p style='text-align: center; font-family: "Times New Roman", Times, serif; '>Esta aplicación te permite simular tus notas y calcular tu promedio final para verificar si pasas el curso.</p>""", unsafe_allow_html=True)
-
-
-# Crear un diccionario que mapea nombres de cursos a códigos
-codigo_a_nombre = {curso["NombreCurso"]: codigo for codigo, curso in datosCursos.items()}
-nombre_a_codigo = {nombre: codigo for nombre, codigo in codigo_a_nombre.items()}
-
-# Extraer los nombres de los cursos
-nombresCursos = list(codigo_a_nombre.keys())
-
-# Crear el selectbox para seleccionar el nombre del curso
-st.markdown("""<h4 style='color: #2196F3; font-family: "Times New Roman", Times, serif;'>1. Selecciona un curso:</h4>""", unsafe_allow_html=True)
-nombreCursoSeleccionado = st.selectbox(
-    "Selecciona un curso:",
-    nombresCursos
+from Function import (
+    cantidadUsada,
+    convertirANumero,
+    datosCursos,
+    mapaSis,
+    matrizSimulacion,
+    nombreEvaluacion,
+    notaExamen,
+    promedioFinalCurso,
+    promedioPracticas,
+    resolverSustitutorio,
+    simularNotaMinima,
 )
 
-# Obtener el código del curso basado en el nombre seleccionado
-codigoCursoSeleccionado = nombre_a_codigo[nombreCursoSeleccionado]
+# ---------------------------------------------------------------- Configuración
 
-# Obtener el curso seleccionado usando el código
-curso_seleccionado = datosCursos[codigoCursoSeleccionado]
+st.set_page_config(page_title="Simulador de Notas", page_icon="📊", layout="wide")
 
-if ("Imagen" in curso_seleccionado and curso_seleccionado["Imagen"] != 0):
-    sticker_prof = curso_seleccionado["Imagen"]
-    if sticker_prof: 
-        st.image(sticker_prof, width=150)
-else:
-    st.write(" ")
+NOTA_MINIMA_APROBACION = 10
+ESCALA = [str(i) for i in range(0, 21)]
+VALORES_ESPECIALES = {
+    "NSP": "No se presentó (se reemplaza por 0)",
+    "0A": "Ausente (no cuenta para el promedio)",
+}
+OPCIONES = ESCALA + list(VALORES_ESPECIALES)
 
-# Mostrar campos para ingresar datos solo si están en el JSON
-st.markdown("""<h4 style='color: #2196F3; font-family: "Times New Roman", Times, serif;'>2. Ingrese las notas para el curso seleccionado:</h4>""", unsafe_allow_html=True)
+# ------------------------------------------------------------------ Encabezado
 
-def mostrar_campos(campo, cantidad):
-    """Muestra una serie de campos de entrada selectbox con opciones numéricas y especiales."""
-    if cantidad <= 0:
+st.title("Simulador de Notas")
+st.caption(
+    "Calcula el promedio final de un curso aplicando las reglas de evaluación reales "
+    "de la Facultad de Ingeniería de Sistemas (FIIS-UNI)."
+)
+
+# ------------------------------------------------------------ Selección curso
+
+nombre_a_codigo = {c["NombreCurso"]: cod for cod, c in datosCursos.items()}
+
+col_curso, col_vacio = st.columns([2, 1])
+with col_curso:
+    nombre_curso = st.selectbox("Curso", sorted(nombre_a_codigo))
+
+codigo = nombre_a_codigo[nombre_curso]
+curso = datosCursos[codigo]
+
+# ------------------------------------------------------- Ficha del curso
+
+n_practicas = curso.get("Practicas", 0)
+n_laboratorios = curso.get("Laboratorios", 0)
+n_monografias = curso.get("Monografias", 0)
+tiene_parcial = curso.get("ExamenParcial", 0) == 1
+tiene_final = curso.get("ExamenFinal", 0) == 1
+tiene_sustitutorio = curso.get("ExamenSustitutorio", 0) == 1
+
+peso_practicas, peso_parcial, peso_final = mapaSis[curso["TipoCalificacion"]]
+
+with st.container(border=True):
+    st.markdown("**Reglas de evaluación**")
+
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Tipo", curso["TipoCalificacion"])
+    c2.metric("Prácticas", n_practicas or "—")
+    c3.metric("Laboratorios", n_laboratorios or "—")
+    c4.metric("Monografías", n_monografias or "—")
+
+    st.caption(
+        f"Ponderación: continuas ×{peso_practicas} · "
+        f"parcial ×{peso_parcial} · final ×{peso_final}"
+    )
+
+    # Cuántas notas se toman en cuenta realmente
+    detalle = []
+    for etiqueta, total in (
+        ("prácticas", n_practicas),
+        ("laboratorios", n_laboratorios),
+    ):
+        if total:
+            detalle.append(
+                f"de las {total} {etiqueta} solo se promedian las "
+                f"{cantidadUsada[total]} mejores"
+            )
+    if detalle:
+        st.caption("Nota: " + " · ".join(detalle) + ".")
+
+# --------------------------------------------------------- Captura de notas
+
+st.subheader("Ingresa tus notas")
+
+OPCIONES_SIN_CERO = [o for o in OPCIONES if o not in ("0",)]
+
+
+def pedir_notas(etiqueta, cantidad, con_ausencia=True):
+    """Muestra los campos de una evaluación y devuelve las notas ingresadas."""
+    if not cantidad:
         return []
-    else:
-        num_columnas = min(3, max(1, cantidad))  # Asegurarse de que al menos 1 columna se use
-        columnas = st.columns(num_columnas)
-        entradas = []
-        
-        opciones = [str(i) for i in range(1, 21)] + ["NSP", "0A"]  # Opciones del 1 al 20, NSP y 0A
-        
-        for i in range(cantidad):
-            col = columnas[i % len(columnas)]  # Selecciona la columna correspondiente
-            with col:
-                entradas.append(st.selectbox(
-                    f"{campo} {i+1}",
-                    options=opciones,
-                    index=9,  # Default "10"
-                    help=f"Ingrese la nota para {campo} {i+1} (1-20, NSP, 0A)"
-                ))
-        return entradas
 
-# Crear campos basados en los valores del JSON
-datos_ingresados = {}
+    opciones = OPCIONES_SIN_CERO if con_ausencia else ESCALA
+    st.markdown(f"**{etiqueta}** ({cantidad})")
 
-if "Practicas" in curso_seleccionado:
-    cantidad = curso_seleccionado["Practicas"]
-    if cantidad > 0:
-        st.write(f"Ingrese las notas para {cantidad} prácticas:")
-    datos_ingresados["Practicas"] = mostrar_campos("Practica", cantidad)
-
-if "Laboratorios" in curso_seleccionado:
-    cantidad = curso_seleccionado["Laboratorios"]
-    if cantidad > 0:
-        st.write(f"Ingrese las notas para {cantidad} laboratorios:")
-        datos_ingresados["Laboratorios"] = mostrar_campos("Laboratorio", cantidad)
-        st.image("Images/informe_lab.jpg", width=150)    
-
-if "Monografias" in curso_seleccionado:
-    cantidad = curso_seleccionado["Monografias"]
-    if cantidad > 0:
-        st.write(f"Ingrese las notas para {cantidad} monografías:")
-    datos_ingresados["Monografias"] = mostrar_campos("Monografía", cantidad)
+    columnas = st.columns(min(4, cantidad))
+    notas = []
+    for i in range(cantidad):
+        with columnas[i % len(columnas)]:
+            notas.append(
+                st.selectbox(
+                    f"{etiqueta} {i + 1}",
+                    opciones,
+                    index=OPCIONES_SIN_CERO.index("10") if "10" in OPCIONES_SIN_CERO else 0,
+                    key=f"{etiqueta}_{i}_{codigo}",
+                    label_visibility="collapsed",
+                )
+            )
+    return notas
 
 
-# Convertir las entradas a números
+practicas = pedir_notas("Práctica", n_practicas)
+laboratorios = pedir_notas("Laboratorio", n_laboratorios)
+monografias = pedir_notas("Monografía", n_monografias)
 
-practicas = [convertirANumero(n) for n in datos_ingresados.get("Practicas", [])]
-laboratorios = [convertirANumero(n) for n in datos_ingresados.get("Laboratorios", [])]
-monografias = [convertirANumero(n) for n in datos_ingresados.get("Monografias", [])]
+examen_parcial = examen_final = examen_sustitutorio = 0
 
-if(curso_seleccionado["ExamenParcial"] == 1):
-    examen_parcial = convertirANumero(st.selectbox("Examen Parcial", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
-    examen_final = convertirANumero(st.selectbox("Examen Final", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
-    examen_sustitutorio = convertirANumero(st.selectbox("Examen Sustitutorio", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
+if tiene_parcial or tiene_final or tiene_sustitutorio:
+    st.markdown("**Exámenes**")
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        examen_parcial = (
+            st.selectbox("Parcial", OPCIONES, index=10, key=f"parcial_{codigo}")
+            if tiene_parcial
+            else "NSP"
+        )
+    with c2:
+        examen_final = (
+            st.selectbox("Final", OPCIONES, index=10, key=f"final_{codigo}")
+            if tiene_final
+            else "NSP"
+        )
+    with c3:
+        examen_sustitutorio = (
+            st.selectbox("Sustitutorio", OPCIONES, index=10, key=f"susti_{codigo}")
+            if tiene_sustitutorio
+            else "NSP"
+        )
 
-# examen_parcial = convertir_a_numero(st.selectbox("Examen Parcial", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
-# examen_final = convertir_a_numero(st.selectbox("Examen Final", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
-# examen_sustitutorio = convertir_a_numero(st.selectbox("Examen Sustitutorio", options=[str(i) for i in range(1, 21)] + ["NSP", "0A"], index=9))
+st.divider()
 
-# here's my idea (by Rolly)
-# PARA 0A:
-# contar la cantida de 0A o pcs que no se eliminan
-# dividir las listas, hacer sort, luego merge y finalmente usar las necesarias
-# una nueva funcion puede ser creada...
-# PARA SIMULACION
-# 1  : mostrar la nota necesaria minima cuando se falta una nota, de manera inmediata
-# averiguar como se hace eso :v
-# 2  : primero pasar mis pcs xd, y vender las polladas XD
-#      es más complicado cuando se combina con susti y finales o parciales
-#      simular por fuerza bruta como primera version
-#      mostrar 20 pares de resultados?
-#      creo que sirve sobre todo cuanto falta final y susti (porque jalaste parcial xd)
-# 3  : no quiero
-#                               MORE UPDATES TOMORROW
+# ------------------------------------------------------------------ Resultado
 
-# Botón para calcular
-st.markdown("""<h4 style='color: #2196F3; font-family: "Times New Roman", Times, serif;'>4. Calcula tu promedio final:</h4>""", unsafe_allow_html=True)
-    
-if st.button("Calcular Promedio"):
-    promedio_final = promedioFinalCurso(practicas, laboratorios, monografias, codigoCursoSeleccionado, examen_parcial, examen_final, examen_sustitutorio)
+if st.button("Calcular promedio", type="primary", width="stretch"):
+    promedio = promedioFinalCurso(
+        practicas,
+        laboratorios,
+        monografias,
+        codigo,
+        examen_parcial,
+        examen_final,
+        examen_sustitutorio,
+    )
 
-    if promedio_final>=10:
-        st.markdown(f"""<h2 style='color: #4CAF50; font-family: "Times New Roman", Times, serif;'>Tu promedio final es: {promedio_final:.2f} 🎉</h2>""", unsafe_allow_html=True)
-        # Agregar imagen aprobado en base al json
-        if("Aprobado" in curso_seleccionado and curso_seleccionado["Aprobado"] != 0):
-            aprobado = curso_seleccionado["Aprobado"]
-            if aprobado: 
-                st.image(aprobado, width=200)
+    # Qué nota de examen se usó realmente tras aplicar el sustitutorio
+    parcial_efectivo, final_efectivo, sustitucion = resolverSustitutorio(
+        practicas,
+        laboratorios,
+        monografias,
+        codigo,
+        examen_parcial,
+        examen_final,
+        examen_sustitutorio,
+    )
+
+    izquierda, derecha = st.columns([1, 2])
+
+    with izquierda:
+        st.metric("Promedio final", f"{promedio:.2f}")
+        if promedio >= NOTA_MINIMA_APROBACION:
+            st.success("Aprobaste el curso.")
         else:
-            st.image("Images/patito_aprobado_default.jpg", width=200)
+            st.error(
+                f"Te faltan **{NOTA_MINIMA_APROBACION - promedio:.2f}** puntos "
+                "para aprobar."
+            )
+
+    with derecha:
+        promedio_continuas = promedioPracticas(
+            practicas, laboratorios, monografias, codigo
+        )
+        st.markdown("**Cómo se calculó**")
+
+        # Aviso del examen sustitutorio, si se usó
+        nota_sustitutorio = convertirANumero(examen_sustitutorio)
+        if sustitucion and nota_sustitutorio > 0:
+            no_rendido = -2 in (convertirANumero(examen_parcial), convertirANumero(examen_final))
+            if no_rendido:
+                faltante = "parcial" if convertirANumero(examen_parcial) == -2 else "final"
+                st.info(
+                    f"No pudiste rendir el **examen {faltante}** (0A), así que el "
+                    f"**sustitutorio ({notaExamen(nota_sustitutorio)})** ocupó el lugar "
+                    f"del **examen {sustitucion}**."
+                )
+            else:
+                st.info(
+                    f"El **examen sustitutorio ({notaExamen(nota_sustitutorio)})** "
+                    f"reemplazó al **examen {sustitucion}**, porque es el que más "
+                    "conviene para el promedio. El otro examen se conserva."
+                )
+        elif nota_sustitutorio == -2:
+            st.warning("Te presentaste al sustitutorio pero figuras como **ausente (0A)**.")
+        elif nota_sustitutorio == 0:
+            st.caption("No te presentaste al examen sustitutorio.")
+
+        filas = [
+            {
+                "Componente": "Prácticas / labs / monografías",
+                "Nota": f"{promedio_continuas:.2f}",
+                "Peso": str(peso_practicas),
+                "Aporte": f"{promedio_continuas * peso_practicas:.2f}",
+            }
+        ]
+        if peso_parcial:
+            filas.append(
+                {
+                    "Componente": "Examen parcial",
+                    "Nota": notaExamen(parcial_efectivo),
+                    "Peso": str(peso_parcial),
+                    "Aporte": f"{parcial_efectivo * peso_parcial:.2f}",
+                }
+            )
+        if peso_final:
+            filas.append(
+                {
+                    "Componente": "Examen final",
+                    "Nota": notaExamen(final_efectivo),
+                    "Peso": str(peso_final),
+                    "Aporte": f"{final_efectivo * peso_final:.2f}",
+                }
+            )
+
+        peso_total = peso_practicas + peso_parcial + peso_final
+        filas.append(
+            {
+                "Componente": "Total",
+                "Nota": "",
+                "Peso": str(peso_total),
+                "Aporte": f"{promedio:.2f}",
+            }
+        )
+
+        st.dataframe(
+            filas,
+            hide_index=True,
+            width="stretch",
+            column_config={
+                "Componente": st.column_config.TextColumn("Componente", width="medium"),
+                "Nota": st.column_config.TextColumn("Nota", width="small"),
+                "Peso": st.column_config.TextColumn("Peso", width="small"),
+                "Aporte": st.column_config.TextColumn("Aporte", width="small"),
+            },
+        )
+
+with st.expander("Referencias de la escala"):
+    st.markdown(
+        "- **NSP** — No se presentó: equivale a 0.\n"
+        "- **0A** — Ausente: no se promedia, pero tampoco se elimina la nota.\n"
+        f"- La nota mínima para aprobar es **{NOTA_MINIMA_APROBACION}**."
+    )
+
+# ------------------------------------------------------- Simulación: ¿qué falta?
+
+st.divider()
+st.subheader("¿Qué nota necesitas?")
+
+# Se listan todas las evaluaciones del curso; el usuario marca cuáles aún no ha rindido.
+opciones_pendientes = []
+for tipo, total in (
+    ("Practicas", n_practicas),
+    ("Laboratorios", n_laboratorios),
+    ("Monografias", n_monografias),
+):
+    for indice in range(total):
+        opciones_pendientes.append((f"{tipo}:{indice}", nombreEvaluacion(tipo, indice)))
+if tiene_parcial:
+    opciones_pendientes.append(("ExamenParcial:0", "Examen parcial"))
+if tiene_final:
+    opciones_pendientes.append(("ExamenFinal:0", "Examen final"))
+
+etiquetas = dict(opciones_pendientes)
+
+c1, c2 = st.columns(2)
+with c1:
+    objetivo = st.number_input(
+        "Nota que quieres alcanzar",
+        min_value=0,
+        max_value=20,
+        value=NOTA_MINIMA_APROBACION,
+        step=1,
+    )
+with c2:
+    pendientes_elegidas = st.multiselect(
+        "Evaluaciones que aún no rindes",
+        [clave for clave, _ in opciones_pendientes],
+        format_func=lambda clave: etiquetas[clave],
+        max_selections=5,
+        key=f"pendientes_{codigo}",
+    )
+
+if not pendientes_elegidas:
+    st.info("Marca al menos una evaluación pendiente para simular.")
+    st.caption(
+        "Se recorre la matriz de combinaciones posibles (M pendientes × N = 21 valores) "
+        "y se muestran las que llegan al objetivo, de menor esfuerzo a mayor."
+    )
+else:
+    pendientes = []
+    for clave in pendientes_elegidas:
+        tipo, indice = clave.split(":")
+        pendientes.append((tipo, int(indice)))
+
+    etiquetas_orden = [nombreEvaluacion(t, i) for t, i in pendientes]
+    matriz = matrizSimulacion(
+        practicas,
+        laboratorios,
+        monografias,
+        codigo,
+        examen_parcial,
+        examen_final,
+        examen_sustitutorio,
+        pendientes,
+        objetivo=objetivo,
+    )
+
+    if matriz["demasiado"]:
+        # Con 5 o más pendientes la matriz es demasiado grande: se usa el método directo
+        st.warning(
+            f"Con {len(pendientes)} pendientes habría "
+            f"{matriz['combinaciones']:,} combinaciones, demasiado para recorrerlas todas. "
+            "Se calcula solo la combinación mínima."
+        )
+        resultado = simularNotaMinima(
+            practicas, laboratorios, monografias, codigo,
+            examen_parcial, examen_final, examen_sustitutorio,
+            pendientes, objetivo=objetivo,
+        )
+        if resultado is None:
+            st.error(f"No es posible alcanzar {objetivo} en este curso.")
+        else:
+            solucion, promedio = resultado
+            st.success(
+                f"Con estas notas llegarías a **{promedio:.2f}**: "
+                + " · ".join(f"{e} {n}" for e, n in solucion)
+            )
+
+    elif not matriz["alcanzable"]:
+        st.error(
+            f"No es posible alcanzar {objetivo} en {curso['NombreCurso']}, "
+            "aunque saques 20 en todo lo pendiente."
+        )
+        st.caption(
+            f"Se evaluaron las {matriz['combinaciones']:,} combinaciones posibles "
+            "y ninguna llega al objetivo."
+        )
 
     else:
-        st.markdown(f"""<h2 style='color: #f32929; font-family: "Times New Roman", Times, serif;'>Tu promedio final es: {promedio_final:.2f} ☠️</h2>""",unsafe_allow_html=True)
-        # Agregar imagen jalado en base al json
-        if("Jalado" in curso_seleccionado and curso_seleccionado["Jalado"] != 0):
-            jalado = curso_seleccionado["Jalado"]
-            if jalado: 
-                st.image(jalado, width=200)
-        else:
-            st.image("Images/gato_jalado_default.jpg", width=200)
+        mejor = matriz["mejor"]
+        notas_recomendadas = " · ".join(
+            f"**{etiquetas_orden[i]}: {mejor[et]}**" for i, et in enumerate(etiquetas_orden)
+        )
+        st.success(
+            f"Combinación de menor esfuerzo para llegar a {objetivo} "
+            f"→ **{mejor['_promedio']:.2f}** de promedio."
+        )
+        st.markdown(notas_recomendadas)
 
-st.write("Quieres ver el simulado?")
-if(st.button("JESUS TOCA ESTA")):
-   for i in range (100):
-        st.write("Edward chupala")
+        st.caption(
+            f"Se recorrieron las **{matriz['combinaciones']:,}** combinaciones de la matriz "
+            f"({len(pendientes)} pendientes × 21 valores posibles); "
+            f"**{len(matriz['filas']):,}** alcanzan el objetivo."
+            + (" Se muestran las de menor esfuerzo." if matriz["truncado"] else "")
+        )
+
+        filas_tabla = [
+            {et: mejor[et] for et in etiquetas_orden}
+            | {"Promedio": round(mejor["_promedio"], 2)}
+        ]
+        st.dataframe(filas_tabla, hide_index=True, width="stretch")
+
+        with st.expander(f"Ver las {len(matriz['filas'])} combinaciones que alcanzan el objetivo"):
+            st.dataframe(
+                [
+                    {et: fila[et] for et in etiquetas_orden}
+                    | {"Promedio": round(fila["_promedio"], 2),
+                       "Suma de notas": fila["_esfuerzo"]}
+                    for fila in matriz["filas"][:300]
+                ],
+                hide_index=True,
+                width="stretch",
+            )
+            st.caption(
+                "Ordenadas de menor a mayor suma de notas; a igual suma, "
+                "se prioriza el reparto más parejo entre las evaluaciones."
+            )

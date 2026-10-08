@@ -7,10 +7,7 @@
         "ExamenParcial": 0,
         "ExamenFinal": 0,
         "ExamenSustitutorio": 0,
-        "Monografias": 1,
-        "Imagen": 0,
-        "Aprobado": "Images/ayala_aprobado.jpg",
-        "Jalado": "Images/rildo_etica_jalado.jpg"
+        "Monografias": 1
     },
     "BFI01": {
         "NombreCurso": "FISICA I",
@@ -20,10 +17,7 @@
         "ExamenParcial": 1,
         "ExamenFinal": 1,
         "ExamenSustitutorio": 1,
-        "Monografias": 0,
-        "Imagen": "Images/fisica_colgado.jpg",
-        "Aprobado": "Images/canote_miau.jpg",
-        "Jalado": "Images/canote_jalado.jpg"
+        "Monografias": 0
     },
     "BIC01": {
         "NombreCurso": "INTRODUCCION A LA COMPUTACION",
@@ -33,10 +27,7 @@
         "ExamenParcial": 1,
         "ExamenFinal": 1,
         "ExamenSustitutorio": 1,
-        "Monografias": 0,
-        "Imagen": "Images/gpt.jpg",
-        "Aprobado": 0,
-        "Jalado": 0
+        "Monografias": 0
     },
     "BMA01": {
         "NombreCurso": "CALCULO DIFERENCIAL",
@@ -46,10 +37,7 @@
         "ExamenParcial": 1,
         "ExamenFinal": 1,
         "ExamenSustitutorio": 1,
-        "Monografias": 0,
-        "Imagen": "Images/tabla_del_7.jpg",
-        "Aprobado": 0,
-        "Jalado": 0
+        "Monografias": 0
     },
     "BMA02": {
         "NombreCurso": "CALCULO INTEGRAL",
@@ -59,10 +47,7 @@
         "ExamenParcial": 1,
         "ExamenFinal": 1,
         "ExamenSustitutorio": 1,
-        "Monografias": 0,
-        "Imagen": "Images/galhina_integral.jpg",
-        "Aprobado": 0,
-        "Jalado": 0
+        "Monografias": 0
     },
     "BMA03": {
         "NombreCurso": "ALGEBRA LINEAL",
@@ -72,10 +57,7 @@
         "ExamenParcial": 1,
         "ExamenFinal": 1,
         "ExamenSustitutorio": 1,
-        "Monografias": 0,
-        "Imagen": "Images/rana_libro.jpg",
-        "Aprobado": 0,
-        "Jalado": 0
+        "Monografias": 0
     },
     "BQU01": {
         "NombreCurso": "QUIMICA I",
@@ -85,10 +67,7 @@
         "ExamenParcial": 1,
         "ExamenFinal": 1,
         "ExamenSustitutorio": 1,
-        "Monografias": 0,
-        "Imagen": "Images/walter_white.jpg",
-        "Aprobado": "Images/alcantara_aprobado.jpg",
-        "Jalado": "Images/jalaste_cachimbo.jpg"
+        "Monografias": 0
     },
     "BRC01": {
         "NombreCurso": "REDACCION Y COMUNICACION",
@@ -98,10 +77,7 @@
         "ExamenParcial": 0,
         "ExamenFinal": 0,
         "ExamenSustitutorio": 0,
-        "Monografias": 2,
-        "Imagen": 0,
-        "Aprobado": "Images/chavarri_reda_aprobado.jpg",
-        "Jalado": 0
+        "Monografias": 2
     },
     "FB101": {
         "NombreCurso": "GEOMETRIA ANALITICA",
@@ -111,10 +87,7 @@
         "ExamenParcial": 1,
         "ExamenFinal": 1,
         "ExamenSustitutorio": 1,
-        "Monografias": 0,
-        "Imagen": "Images/acosta_preparao.jpg",
-        "Aprobado": "Images/vivan_riquipoints.jpg",
-        "Jalado": "Images/acosta_anal_jalado.jpg"
+        "Monografias": 0
     },
     "FB301": {
         "NombreCurso": "MATEMATICA DISCRETA",
@@ -124,10 +97,7 @@
         "ExamenParcial": 1,
         "ExamenFinal": 1,
         "ExamenSustitutorio": 1,
-        "Monografias": 0,
-        "Imagen": 0,
-        "Aprobado": 0,
-        "Jalado": 0
+        "Monografias": 0
     },
     "HU102": {
         "NombreCurso": "DESARROLLO PERSONAL",
@@ -137,10 +107,7 @@
         "ExamenParcial": 0,
         "ExamenFinal": 0,
         "ExamenSustitutorio": 0,
-        "Monografias": 2,
-        "Imagen": "Images/lobo_solitario.png",
-        "Aprobado": "Images/lobo_desarrollo_aprobado.jpg",
-        "Jalado": "Images/viviana_desarrollo_jalado.jpg"
+        "Monografias": 2
     },
     "SI101": {
         "NombreCurso": "INTRODUCCION AL PENSAMIENTO Y A LA INGENIERIA DE SISTEMAS",
@@ -150,10 +117,7 @@
         "ExamenParcial": 1,
         "ExamenFinal": 1,
         "ExamenSustitutorio": 1,
-        "Monografias": 0,
-        "Imagen": "Images/intro_sist.jpg",
-        "Aprobado": "Images/mery_aprobado.jpg",
-        "Jalado": "Images/mery_jalado.jpg"
+        "Monografias": 0
     },
     "SI201": {
         "NombreCurso": "PSICOLOGIA SISTEMICA",
@@ -163,10 +127,7 @@
         "ExamenParcial": 1,
         "ExamenFinal": 1,
         "ExamenSustitutorio": 1,
-        "Monografias": 1,
-        "Imagen": 0,
-        "Aprobado": 0,
-        "Jalado": 0
+        "Monografias": 1
     },
     "SI203": {
         "NombreCurso": "TEORIA Y CIENCIA DE SISTEMAS",
@@ -176,10 +137,7 @@
         "ExamenParcial": 1,
         "ExamenFinal": 1,
         "ExamenSustitutorio": 1,
-        "Monografias": 2,
-        "Imagen": 0,
-        "Aprobado": 0,
-        "Jalado": "Images/canchano_jalado.jpg"
+        "Monografias": 2
     },
     "SI205": {
         "NombreCurso": "ALGORITMIA Y ESTRUCTURA DE DATOS",
@@ -189,10 +147,7 @@
         "ExamenParcial": 1,
         "ExamenFinal": 1,
         "ExamenSustitutorio": 1,
-        "Monografias": 0,
-        "Imagen": "Images/gato_jateando_pc.jpg",
-        "Aprobado": 0,
-        "Jalado": 0
+        "Monografias": 0
     },
     "SI207": {
         "NombreCurso": "SISTEMAS BIOLOGICOS Y ECOLOGICOS",
@@ -202,10 +157,7 @@
         "ExamenParcial": 1,
         "ExamenFinal": 1,
         "ExamenSustitutorio": 1,
-        "Monografias": 1,
-        "Imagen": "Images/bosque.jpg",
-        "Aprobado": 0,
-        "Jalado": 0
+        "Monografias": 1
     },
     "SW101": {
         "NombreCurso": "INTRODUCCION A LA INGENIERIA DE SOFTWARE",
@@ -215,9 +167,6 @@
         "ExamenParcial": 1,
         "ExamenFinal": 1,
         "ExamenSustitutorio": 1,
-        "Monografias": 0,
-        "Imagen": 0,
-        "Aprobado": 0,
-        "Jalado": 0
+        "Monografias": 0
     }
 }
